@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS customers (
+    customer_id         VARCHAR(20) PRIMARY KEY,
+    gender               VARCHAR(10),
+    senior_citizen       BOOLEAN,
+    partner              BOOLEAN,
+    dependents           BOOLEAN,
+    tenure               INTEGER,
+    phone_service        BOOLEAN,
+    multiple_lines       VARCHAR(30),
+    internet_service     VARCHAR(20),
+    online_security      VARCHAR(30),
+    online_backup        VARCHAR(30),
+    device_protection    VARCHAR(30),
+    tech_support         VARCHAR(30),
+    streaming_tv         VARCHAR(30),
+    streaming_movies     VARCHAR(30),
+    contract             VARCHAR(20),
+    paperless_billing    BOOLEAN,
+    payment_method       VARCHAR(40),
+    monthly_charges      NUMERIC(10,2),
+    total_charges        NUMERIC(10,2),
+    churn                BOOLEAN
+);
