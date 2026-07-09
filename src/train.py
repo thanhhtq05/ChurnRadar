@@ -5,6 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 import joblib
 import os
+from xgboost import XGBClassifier
 
 from preprocessing import prepare_features
 
@@ -56,6 +57,22 @@ def main():
     y_test.to_csv('data/processed/y_test.csv', index=False)
     pd.DataFrame(X_test_scaled, columns=X_test.columns).to_csv('data/processed/X_test_scaled.csv', index=False)
 
+    print("\nTraining XGBoost...")
+    scale_pos_weight = (y_train == 0).sum() / (y_train == 1).sum()  # tương đương class_weight='balanced'
+    
+    xgb_model = XGBClassifier(
+        scale_pos_weight=scale_pos_weight,
+        random_state=42,
+        eval_metric='logloss'
+    )
+    xgb_model.fit(X_train, y_train)  # dùng X_train gốc, KHÔNG dùng bản đã scale
+
+    joblib.dump(xgb_model, 'models/xgboost_churn.pkl')
+
+    # Lưu X_test bản KHÔNG scale để XGBoost dùng ở bước evaluate
+    X_test.to_csv('data/processed/X_test_unscaled.csv', index=False)
+
+    print("XGBoost model trained and saved to models/xgboost_churn.pkl")
     print("\nBaseline model trained and saved to models/baseline_logreg.pkl")
 
 if __name__ == "__main__":
