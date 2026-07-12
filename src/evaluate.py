@@ -40,17 +40,34 @@ def evaluate_model(model, X_test, y_test, model_name, use_proba_threshold=0.5):
 
 def main():
     X_test, X_test_scaled, y_test = load_test_data()
+    X_test_unscaled = pd.read_csv('data/processed/X_test_unscaled.csv')
 
     baseline = joblib.load('models/baseline_logreg.pkl')
+    xgb_model = joblib.load('models/xgboost_churn.pkl')
 
     results = []
     results.append(evaluate_model(baseline, X_test_scaled, y_test, 'Logistic Regression'))
+    results.append(evaluate_model(xgb_model, X_test_unscaled, y_test, 'XGBoost'))
 
     print("\n" + "="*50)
     print("Summary")
     print("="*50)
     for r in results:
         print(f"{r['model']}: AUC={r['auc']:.4f}, F1={r['f1']:.4f}")
-
+        
+        
 if __name__ == "__main__":
     main()
+    
+import pandas as pd
+import joblib
+
+model = joblib.load('models/baseline_logreg.pkl')
+feature_names = joblib.load('models/feature_columns.pkl')
+
+coef_df = pd.DataFrame({
+    'feature': feature_names,
+    'coefficient': model.coef_[0]
+}).sort_values('coefficient', key=abs, ascending=False)
+
+print(coef_df.head(10))
