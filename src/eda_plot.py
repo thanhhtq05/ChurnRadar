@@ -6,7 +6,7 @@ import os
 
 # --- Cấu hình ---
 DB_USER = "postgres"
-DB_PASSWORD = "051207"  # thay password thật của em
+DB_PASSWORD = "051207"  
 DB_HOST = "localhost"
 DB_PORT = "5432"
 DB_NAME = "churn_db"
