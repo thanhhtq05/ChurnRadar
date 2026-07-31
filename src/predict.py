@@ -17,20 +17,20 @@ CATEGORICAL_COLS = [
 def preprocess_single_input(data: dict) -> pd.DataFrame:
     df = pd.DataFrame([data])
 
-    # Convert Yes/No -> 1/0 cho các cột boolean (giống lúc train)
+    # Convert Yes/No -> 1/0 boolean columns
     yes_no_cols = ['partner', 'dependents', 'phone_service', 'paperless_billing']
     for col in yes_no_cols:
         df[col] = df[col].map({'Yes': 1, 'No': 0})
 
-    # One-hot encode giống lúc train
+    # One-hot encode
     df = pd.get_dummies(df, columns=CATEGORICAL_COLS)
 
-    # Đảm bảo đủ cột đúng như lúc train (cột nào thiếu -> điền 0)
+    # Make sure all columns are present just like during training (any missing column -> fill with 0)
     for col in feature_columns:
         if col not in df.columns:
             df[col] = 0
 
-    # Sắp xếp đúng thứ tự cột như lúc train
+    # Arrange the columns in the correct order like during training
     df = df[feature_columns]
 
     return df

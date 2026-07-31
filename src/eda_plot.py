@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-# --- Cấu hình ---
+# connect database
 DB_USER = "postgres"
 DB_PASSWORD = "051207"  
 DB_HOST = "localhost"

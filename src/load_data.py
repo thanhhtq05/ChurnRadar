@@ -3,14 +3,14 @@ import pandas as pd
 from sqlalchemy import create_engine
 import os
 
-# --- Cấu hình kết nối ---
+# connect database
 DB_USER = "postgres"
-DB_PASSWORD = "051207"
+DB_PASSWORD = "" 
 DB_HOST = "localhost"
-DB_PORT = "5432"
+DB_PORT = ""
 DB_NAME = "churn_db"
 
-CSV_PATH = "data/raw/data_customer_churn.csv"  # đổi tên file nếu cần
+CSV_PATH = "data/raw/data_customer_churn.csv"  
 
 COLUMN_MAPPING = {
     'customerID': 'customer_id',
@@ -39,11 +39,11 @@ COLUMN_MAPPING = {
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.rename(columns=COLUMN_MAPPING)
 
-    # Xử lý TotalCharges
+    # Handle TotalCharges
     df['total_charges'] = df['total_charges'].replace(' ', pd.NA)
     df['total_charges'] = pd.to_numeric(df['total_charges'], errors='coerce')
 
-    # Chuẩn hóa Yes/No -> boolean
+    # Normalize Yes/No -> boolean
     yes_no_cols = ['partner', 'dependents', 'phone_service',
                    'paperless_billing', 'churn']
     for col in yes_no_cols:
@@ -60,7 +60,7 @@ def main():
     print(f"Raw shape: {df.shape}")
     df = clean_data(df)
 
-    # Kiểm tra missing values sau khi clean
+    # Check for missing values after cleaning
     missing = df.isnull().sum()
     print("Missing values per column:\n", missing[missing > 0])
 
