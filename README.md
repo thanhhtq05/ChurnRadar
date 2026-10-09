@@ -1,6 +1,6 @@
-# Customer Churn Prediction
+# ChurnRadar: Telecom Customer Churn Prediction
 
-Predicting the likelihood that customers of a telecom company will leave the service (churn), using an end-to-end pipeline: PostgreSQL → SQL-based EDA → Feature Engineering → Model Comparison → FastAPI Deployment.
+Predicting the likelihood that customers of a telecom company will leave the service (churn), using an end-to-end pipeline: PostgreSQL → SQL-based EDA → Feature Engineering → Model Comparison → FastAPI Deployment → Docker.
 
 ## 📌 Problem Statement
 
@@ -11,7 +11,7 @@ Retaining existing customers is always cheaper than acquiring new ones. This pro
 ## 🏗️ Project Structure
 
 ```
-churn-prediction/
+ChurnRadar/
 ├── data/
 │   ├── raw/                    # Original CSV from Kaggle
 │   └── processed/              # Processed train/test sets
@@ -33,7 +33,10 @@ churn-prediction/
 │   ├── main.py                  # FastAPI app
 │   └── schemas.py               # Pydantic request/response schemas
 ├── reports/figures/              # EDA charts, confusion matrix
-├── requirements.txt
+├── Dockerfile                    # Container image for the API
+├── .dockerignore
+├── requirements.txt              # Full environment (EDA + training + API)
+├── requirements-api.txt          # Minimal dependencies for the Docker image
 └── README.md
 ```
 
@@ -43,6 +46,7 @@ churn-prediction/
 - **Data Processing:** pandas, SQLAlchemy, psycopg2
 - **Machine Learning:** scikit-learn, XGBoost
 - **API:** FastAPI, Pydantic, Uvicorn
+- **Containerization:** Docker
 - **Visualization:** matplotlib, seaborn
 
 ## 📊 Key Results
@@ -157,6 +161,17 @@ Open `http://127.0.0.1:8000/docs` to test the `/predict` endpoint through Swagge
 }
 ```
 
+### 8. Run the API with Docker
+
+The image contains only the API and the trained model files (no PostgreSQL needed to serve predictions).
+
+```
+docker build -t churnradar .
+docker run -p 8000:8000 churnradar
+```
+
+Open `http://127.0.0.1:8000/docs` and call `/predict` with the example request above.
+
 ## 💡 Business Recommendations
 
 1. Focus customer care on the first 12 months (the period with the highest churn risk)
@@ -171,6 +186,7 @@ Open `http://127.0.0.1:8000/docs` to test the `/predict` endpoint through Swagge
 - Decision Tree / Random Forest have not been tested
 - `total_charges` is collinear with `tenure` × `monthly_charges`, so interpret it with caution
 - The dataset is a single-point-in-time snapshot and does not reflect seasonality
+- The API is containerized and runs locally; it is not deployed to a cloud service
 - Future extension: SHAP values to explain predictions for individual customers
 
 ## 📈 Business Impact
